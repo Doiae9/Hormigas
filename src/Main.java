@@ -13,6 +13,11 @@ public class Main {
         System.out.println("--------------");
         int [][] Ct =Proyector.ProyectarTransiciones(Cl,St);
         Proyector.ImprimirMatiz(Ct);
+        System.out.println("---------------");
+        System.out.println("Funcion para C-");
+        int [][]C_=Proyector.ProyeccionC(C,Sl,St);
+        Proyector.ImprimirMatiz(C_);
+        boolean esCero = Proyector.ComprobarCero(C_);
     }
 
 }
