@@ -125,16 +125,26 @@ public class Proyector {
     public static void ImprimirMatiz(int [][] matriz){
         for(int i=0; i<matriz.length; i++){
             for(int j=0; j<matriz[i].length; j++){
-               // System.out.print(matriz[i][j]+"\t");
+                System.out.print(matriz[i][j]+"\t");
 
             }
             System.out.println(" ");
 
         }
     }
-
-    //Funcion de referencia
-    public static int [][] ObtenerUltimaProyeccion(){
-        return ultimaProyeccion;
+    public static void ImprimirGranArreglo(long [] arreglo){
+        for(int i=0; i<arreglo.length; i++){
+            System.out.print(arreglo[i]+"\t");
+        }
+        System.out.println(" ");
     }
+    public static void ImprimirGranMatriz(long [][] matriz){
+        for(int i=0; i<matriz.length; i++){
+            for(int j=0; j<matriz[i].length; j++){
+                System.out.print(matriz[i][j]+"\t");
+            }
+            System.out.println(" ");
+        }
+    }
+
 }
