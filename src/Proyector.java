@@ -12,8 +12,7 @@ public class Proyector {
                 lista.add(C[i]);
             }
         }
-        long[][] Cl = lista.toArray(new long[lista.size()][]);
-        return Cl;
+        return lista.toArray(new long[lista.size()][]);
 
     }
 
@@ -23,30 +22,29 @@ public class Proyector {
         int columnas = C[0].length;
         int nuevasTransiciones = 0;
         //conteo de columnas
-        for (int j=0; j<St.length; j++){
-            if(St[j]==0){
+        for (long l : St) {
+            if (l == 0) {
                 nuevasTransiciones++;
             }
         }
 
-       for (int i=0; i<C.length; i++) {
-           if (nuevasTransiciones == 0) {
-               return new long[0][0];
-           }
-           long[] nuevaFila = new long[nuevasTransiciones];
-           int colIndex = 0;
+        for (long[] longs : C) {
+            if (nuevasTransiciones == 0) {
+                return new long[0][0];
+            }
+            long[] nuevaFila = new long[nuevasTransiciones];
+            int colIndex = 0;
 
-           for (int j = 0; j < columnas; j++) {
-               if (St[j] == 0) {
-                   nuevaFila[colIndex] = C[i][j];
-                   colIndex++;
-               }
-           }
-           lista.add(nuevaFila);
-       }
-       long [][]resultado = lista.toArray(new long[lista.size()][]);
+            for (int j = 0; j < columnas; j++) {
+                if (St[j] == 0) {
+                    nuevaFila[colIndex] = longs[j];
+                    colIndex++;
+                }
+            }
+            lista.add(nuevaFila);
+        }
 
-       return resultado;
+        return lista.toArray(new long[lista.size()][]);
 
     }
 
@@ -119,12 +117,12 @@ public class Proyector {
         return false;
     }
     //Comprobamos si existe un 0 o alguna redundancia
-    public static boolean ED(long C_[][]){
+    public static boolean ED(long[][] C_){
        return !ComprobarCero(C_) && !ComprobarRedundancia(C_);
 
     }
     //Verificamos que sea ED
-    public static boolean VerificarED(long C[][],long [] Sl, long [] St){
+    public static boolean VerificarED(long[][] C, long [] Sl, long [] St){
         long[][] proyeccion = ProyeccionC(C, Sl, St);
         if (proyeccion.length == 0 || proyeccion[0].length == 0) {
             // Evitar evaluaciones innecesarias si no hay datos
@@ -159,5 +157,21 @@ public class Proyector {
             System.out.println(" ");
         }
     }
+    //Validación diferente antes de entrar al ciclo
+    public static boolean esObviamenteInvalido(long[] Sl, long[] St) {
+        // 🎯 Filtro 1: muy pocos sensores activos (ej. config trivial)
+        int activosL = 0;
+        for (long b : Sl) if (b == 1) activosL++;
+        if (activosL == 0) return true; // Ningún lugar activo = no interesante
+
+        // 🎯 Filtro 2: transiciones contradictorias (ajusta según tu modelo)
+        if (St.length >= 2 && St[0] == 1 && St[1] == 1) return true; // T0 y T1 no pueden estar activas juntas
+
+        // 🎯 Filtro 3: zonas muertas conocidas (puedes definir zonas inválidas)
+        // if (Sl[3] == 1 && Sl[7] == 1) return true;
+
+        return false; // Si nada inválido, continuar evaluación
+    }
+
 
 }

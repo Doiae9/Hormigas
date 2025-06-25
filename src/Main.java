@@ -1,6 +1,7 @@
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 public class Main {
     public static void main(String[] args) {
@@ -10,9 +11,14 @@ public class Main {
         long[] St = {1, 0, 1, 0, 1};
        // double[] Cl = {1, 1, 1, 1, 1};
        // double[] Ct = {1000, 1000, 1000, 1000, 1000};
-        double [] Cl = {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1};
-
-        double[] Ct = {1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000};
+       // double [] Cl = {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1};
+        double [] Cl = {30, 30, 40, 40, 50, 50, 40, 40, 40, 40, 50, 40, 50, 30, 40, 50, 40, 40, 40, 50,         40, 50, 50, 50, 50, 50, 50, 35, 35, 35, 35, 50, 50, 50};
+       // double[] Ct = {1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000};
+        double [] Ct = {20, 30, 30, 30, 30,
+                20, 20, 25, 25, 20,
+                20, 20, 20, 20, 20,
+                30, 20, 20, 30, 20,
+                25, 20, 20};
         long [][] matrizC = {{-1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0}, //L1
 
                 {1, -1, -1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
@@ -175,8 +181,20 @@ public class Main {
 //        System.out.println("Y con peso minimo fueron: "+ ConfiguracionesLigeras.size());
 //        System.out.println("Peso final mínimo:" + pesoMinimo);
 
-       List<long[][]>ConfiguracionesED= EscudrinnadorED.BuscarED(matrizC, Cl, Ct);
-        EscudrinnadorED.ImprimirED(ConfiguracionesED);
+        //List<long[][]>ConfiguracionesED=EscudrinnadorED.BuscarED(matrizC, Cl, Ct);
+
+       // List<long[][]>ConfiguracionesED=EscudrinnadorED.BuscarEDSoloLugares(matrizC, Cl, Ct);
+        //EscudrinnadorED.ImprimirED(ConfiguracionesED);
+        try {
+            //int hilos = 3;
+            List<long[][]> resultados = BusquedaEDMultihiloConProgreso.BuscarEDMultihiloConProgreso(matrizC, Cl, Ct, 4);
+            //List<long[][]>ConfiguracionesED=EscudrinnadorED.BuscarED(matrizC, Cl, Ct);
+            // Puedes procesar `resultados` aquí
+            EscudrinnadorED.ImprimirED(resultados);
+        } catch (InterruptedException | ExecutionException e) {
+            e.printStackTrace(); // O tu manejo de errores favorito
+        }
+
     }
     //=====================================================================
 }

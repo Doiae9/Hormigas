@@ -1,24 +1,37 @@
 public class Valuador {
 
     public static double CalcularPesoTransicion(double []Ct, long []St){
-        int aux=0;
+        double aux=0;
         for(int i=0; i<St.length; i++){
-                aux += Ct[i] * St[i];
+            if(St[i]==1)
+                aux += Ct[i];
 
         }
         return aux;
     }
     public static double CalcularPesoLugar(double[] Cl, long []Sl){
-        int aux=0;
-        for(int i=0; i<Sl.length; i++){
-                aux += Cl[i] * Sl[i];
+        double aux=0;
+        for(int i=0; i<Sl.length; i++) {
+            if (Sl[i] == 1) {
+                aux += Cl[i];
+            }
         }
         return aux;
     }
     public static double CalcularPesoTotal(double[] Cl, double []Ct, long[] Sl, long[] St){
-        double total=0.0;
-        total = CalcularPesoLugar(Cl,Sl) + CalcularPesoTransicion(Ct,St);
-        return total;
+       return CalcularPesoLugar(Cl,Sl) + CalcularPesoTransicion(Ct,St);
+    }
+
+    //funcion eulistica para comprobar antes de calcular:
+    public static double estimarPesoMinimo(long[] Sl, long[] St, double[] Cl, double[] Ct) {
+        double peso = 0;
+        for (int i = 0; i < Sl.length; i++) {
+            if (Sl[i] == 1) peso += Cl[i];
+        }
+        for (int i = 0; i < St.length; i++) {
+            if (St[i] == 1) peso += Ct[i];
+        }
+        return peso;
     }
 
 }
