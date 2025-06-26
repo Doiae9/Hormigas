@@ -34,7 +34,7 @@ public class EscudrinnadorED {
                     ultimoPesoMinimoMostrado = pesoMinimo;
                 }
             }
-            if(Proyector.esObviamenteInvalido(Sl,St)){ continue;}
+            //if(Proyector.esObviamenteInvalido(Sl,St)){ continue;}
                 if (Proyector.VerificarED(C, Sl, St)) {
                     double PesoActual = Valuador.CalcularPesoTotal(Cl, Ct, Sl, St);
                     aux++;

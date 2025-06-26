@@ -46,9 +46,9 @@ public class BusquedaEDMultihiloConProgreso {
                 long[] Sl = S[0];
                 long[] St = S[1];
 
-                if(Proyector.esObviamenteInvalido(Sl,St)){ continue;}
-                double estimado = Valuador.estimarPesoMinimo(Sl, St, Cl, Ct);
-                if (estimado >= pesoMinimoGlobal.get()) continue;
+//                if(Proyector.esObviamenteInvalido(Sl,St)){ continue;}
+//                double estimado = Valuador.estimarPesoMinimo(Sl, St, Cl, Ct);
+//                if (estimado >= pesoMinimoGlobal.get()) continue;
                 if (Proyector.VerificarED(C, Sl, St)) {
                     double pesoActual = Valuador.CalcularPesoTotal(Cl, Ct, Sl, St);
 
@@ -130,4 +130,5 @@ public class BusquedaEDMultihiloConProgreso {
 
         return mejoresConfigsGlobal;
     }
+
 }
