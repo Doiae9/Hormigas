@@ -85,13 +85,14 @@ public class Main {
 
                 {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, -1, 1}};
 
-        int numHilos = 2;
+        int numHilos = 4;
 
         try {
             // Llamada al metod multihilo desde el main
             System.out.println("Con "+ numHilos +" hilos");
             System.out.println("Procesadores disponibles: (Nucleos lógicos) " + Runtime.getRuntime().availableProcessors());
-            List<long[][]> resultados = TodoEnUno.BuscarEDMultihullConProgreso(matrizC, Cl, Ct, numHilos);
+            List<long[][]> resultados = TodoEnUnoLugares.BuscarEDSoloLugares(matrizC, Cl, Ct, numHilos);
+            //List<long[][]> resultados = TodoEnUnoOptimizado.BuscarEDMultihullConProgreso(matrizC, Cl, Ct, numHilos);
             // Mostrar resultados
             System.out.println("\n--- Resultados de configuraciones ED ---");
             for (long[][] config : resultados) {

@@ -1,10 +1,11 @@
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.*;
-import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.concurrent.atomic.AtomicReference;
+import java.util.concurrent.atomic.LongAdder;
 
 public class TodoEnUno {
     static class Worker extends RecursiveTask<List<long[][]>> {
@@ -17,12 +18,12 @@ public class TodoEnUno {
         private final AtomicReference<Double> pesoMinimoGlobal;
         private final AtomicLong progresoGlobal;
         private final LongProgressBar barra;
-        private final Map<Integer, AtomicInteger> frecuenciaSensoresActivosGlobal;
+        private final Map<Integer, LongAdder> frecuenciaSensoresActivosGlobal;  // Cambiado a LongAdder
 
         public Worker(long start, long end, int n, int m, long[][] C, double[] Cl, double[] Ct,
                       AtomicReference<Double> pesoMinimoGlobal,
                       AtomicLong progresoGlobal, LongProgressBar barra,
-                      Map<Integer, AtomicInteger> frecuenciaSensoresActivosGlobal) {
+                      Map<Integer, LongAdder> frecuenciaSensoresActivosGlobal) {
             this.start = start;
             this.end = end;
             this.n = n;
@@ -57,12 +58,14 @@ public class TodoEnUno {
         private List<long[][]> ejecutarDirectamente() {
             double pesoMinLocal = Double.MAX_VALUE;
             List<long[][]> locales = new ArrayList<>();
+            long counter = 0; // Contador para progreso
 
             for (long num = start; num < end; num++) {
                 long[][] S = ConvertirYdividirBinarios(num, n, m);
                 long[] Sl = S[0];
                 long[] St = S[1];
 
+                // VERIFICACIÓN DIRECTA SIN PROYECCIONES
                 if (VerificarED(C, Sl, St)) {
                     double pesoActual = CalcularPesoTotal(Cl, Ct, Sl, St);
 
@@ -74,19 +77,31 @@ public class TodoEnUno {
                         locales.add(S);
                     }
 
-                    int activos = 0;
-                    for (long bit : Sl) if (bit == 1) activos++;
+                    // Actualizar frecuencias con LongAdder
+                    int activos = Long.bitCount(
+                            Arrays.stream(Sl).reduce(0, (a, b) -> (a << 1) | (b & 1))
+                    );
                     frecuenciaSensoresActivosGlobal
-                            .computeIfAbsent(activos, k -> new AtomicInteger())
-                            .incrementAndGet();
+                            .computeIfAbsent(activos, k -> new LongAdder())
+                            .increment();
                 }
 
-                if ((num - start) % 20_000_000 == 0) {
-                    long progresoActual = progresoGlobal.addAndGet(20_000_000);
-                    barra.update(progresoActual);
+                // Optimización: Contador simple sin módulo
+                counter++;
+                if (counter == 20_000_000) {
+                    progresoGlobal.addAndGet(counter);
+                    barra.update(progresoGlobal.get());
+                    counter = 0;
                 }
             }
 
+            // Actualizar resto del progreso
+            if (counter > 0) {
+                progresoGlobal.addAndGet(counter);
+                barra.update(progresoGlobal.get());
+            }
+
+            // Sincronizar peso mínimo global
             synchronized (pesoMinimoGlobal) {
                 if (pesoMinLocal < pesoMinimoGlobal.get()) {
                     pesoMinimoGlobal.set(pesoMinLocal);
@@ -95,7 +110,6 @@ public class TodoEnUno {
                     return locales;
                 }
             }
-
             return new ArrayList<>();
         }
     }
@@ -107,7 +121,7 @@ public class TodoEnUno {
 
         AtomicReference<Double> pesoMinimoGlobal = new AtomicReference<>(Double.MAX_VALUE);
         AtomicLong progresoGlobal = new AtomicLong(0);
-        Map<Integer, AtomicInteger> frecuenciaSensoresActivosGlobal = new ConcurrentHashMap<>();
+        Map<Integer, LongAdder> frecuenciaSensoresActivosGlobal = new ConcurrentHashMap<>();
         LongProgressBar barra = new LongProgressBar(total, 40);
         barra.start();
 
@@ -120,8 +134,9 @@ public class TodoEnUno {
         System.out.println("\nPeso mínimo encontrado: " + pesoMinimoGlobal.get());
         System.out.println("\nFrecuencia de sensores activos:");
         frecuenciaSensoresActivosGlobal.forEach((activos, count) ->
-                System.out.println(activos + " sensores activos: " + count.get() + " configuración(es)")
+                System.out.println(activos + " sensores activos: " + count.longValue() + " configuración(es)")
         );
+
         return resultado;
     }
 
@@ -301,14 +316,45 @@ public class TodoEnUno {
 
     }
     //Verificamos que sea ED
-    public static boolean VerificarED(long[][] C, long [] Sl, long [] St){
-        long[][] proyeccion = ProyeccionC(C, Sl, St);
-        if (proyeccion.length == 0 || proyeccion[0].length == 0) {
-            // Evitar evaluaciones innecesarias si no hay datos
-            return false;
+    // Nueva implementación de VerificarED sin proyecciones
+    public static boolean VerificarED(long[][] C, long[] Sl, long[] St) {
+        int n = Sl.length;
+        int m = St.length;
+
+        // 1. Verificar columnas nulas
+        for (int j = 0; j < m; j++) {
+            if (St[j] == 0) {  // Columna activa
+                boolean allZero = true;
+                for (int i = 0; i < n; i++) {
+                    if (Sl[i] == 1 && C[i][j] != 0) {
+                        allZero = false;
+                        break;
+                    }
+                }
+                if (allZero) return false;
+            }
         }
-        return ED(proyeccion);
+
+        // 2. Verificar columnas redundantes
+        for (int j1 = 0; j1 < m; j1++) {
+            if (St[j1] != 0) continue;
+            for (int j2 = j1 + 1; j2 < m; j2++) {
+                if (St[j2] != 0) continue;
+                boolean iguales = true;
+                for (int i = 0; i < n; i++) {
+                    if (Sl[i] == 1 && C[i][j1] != C[i][j2]) {
+                        iguales = false;
+                        break;
+                    }
+                }
+                if (iguales) return false;
+            }
+        }
+        return true;
     }
+
+    // Inicializar mapa de frecuencias con LongAdder
+    Map<Integer, LongAdder> frecuenciaSensoresActivosGlobal = new ConcurrentHashMap<>();
 
 
     //Imprimir Matriz
