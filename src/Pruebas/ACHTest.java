@@ -15,7 +15,7 @@ public class ACHTest {
     private final double beta;
     private final double evaporation;
     private final double Q;
-    private Configuracion bestConfiguracion;
+    private Configuracion  bestConfiguracion;
     private double bestCost;
     private final Random random;
     private final long[][] C;
@@ -71,11 +71,13 @@ public class ACHTest {
 
     private Configuracion constructSolution() {
         Configuracion conf = new Configuracion(numLugares,numTransiciones);
-
-
+        int RangoAccion = 2;
+        int maxIntentos = (numLugares + numTransiciones)*RangoAccion; // o algo más grande
+        int intentos = 0;
       do {
           selectNextNode(conf);
-      }while (!ProyectorACH.VerificarED(C,conf.Sl, conf.St));
+          intentos ++;
+      }while (!ProyectorACH.VerificarED(C,conf.Sl, conf.St)&& intentos < maxIntentos);
 
       return conf;
     }
@@ -83,16 +85,20 @@ public class ACHTest {
         double[] probabilities = new double[numLugares+numTransiciones];
         double sum = 0.0;
 
+        //System.out.println("Sl antes: " + Arrays.toString(conf.Sl));
+        //System.out.println("St antes: " + Arrays.toString(conf.St));
+
         for (int i = 0; i < numLugares; i++) {
             if (conf.Sl[i]==0) {
                 probabilities[i] = Math.pow(pheromoneL[i], alpha) * Math.pow(1.0 / Cl[i], beta);
                 sum += probabilities[i];
             }
-        }
-        for (int i = numLugares; i < numLugares+numTransiciones; i++) {
-            if (conf.St[i]==0) {
-                probabilities[i] = Math.pow(pheromoneT[i], alpha) * Math.pow(1.0 / Ct[i], beta);
-                sum += probabilities[i];
+        }       // 0                    5+5= 10
+        for (int j =0; j <numTransiciones; j++) {
+            int indx= numLugares +j; //Aqui se accede al tamaño real de la ruleta
+            if (conf.St[j]==0) { //Aqui se accede al tamaño real del arreglo St
+                probabilities[indx] = Math.pow(pheromoneT[j], alpha) * Math.pow(1.0 / Ct[j], beta);
+                sum += probabilities[indx];
             }
         }
 
@@ -108,11 +114,13 @@ public class ACHTest {
                 }
             }
         }
-        for (int i = numLugares; i < numLugares+numTransiciones; i++) {
-            if (conf.St[i]==0) {
-                sum += probabilities[i];
+        for (int j = 0; j < numTransiciones; j++) {
+            int indx= numLugares+j;
+            if (conf.St[j]==0) {
+                sum += probabilities[indx];
                 if (sum >= r) {
-                    conf.St[i] = 1;
+                    conf.St[j] = 1;
+                   // System.out.println("✅ Transición activada en St[" + j + "]");
                     return;
                 }
             }
@@ -133,12 +141,12 @@ public class ACHTest {
         for (int i = 0; i < numAnts; i++) {
             for (int j = 0; j < numLugares; j++) {
                 if(antConfigurations[i].Sl[j]==1) {
-                    pheromoneL[j] += Q / antCosts[j];
+                    pheromoneL[j] += Q / antCosts[i];
                 }
             }
-            for (int j = 0; j < numTransiciones; j++) {
-                if(antConfigurations[i].St[j]==1) {
-                    pheromoneT[j] += Q / antCosts[j];
+            for (int k = 0; k < numTransiciones; k++) {
+                if(antConfigurations[i].St[k]==1) {
+                    pheromoneT[k] += Q / antCosts[i];
                 }
             }
 

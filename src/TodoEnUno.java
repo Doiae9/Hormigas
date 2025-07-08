@@ -165,7 +165,7 @@ public class TodoEnUno {
         System.arraycopy(binarios, m, Sl, 0, n);
 
         return new long [][] {Sl,
-                St};
+                              St};
     }
 
     public static long[][] ConvertirYdividirBinarios(long decimal, int n, int m){

@@ -142,7 +142,7 @@ public class Proyector {
             // Evitar evaluaciones innecesarias si no hay datos
             return false;
         }
-        return ED(proyeccion)? true : false;
+        return ED(proyeccion);
     }
 
 

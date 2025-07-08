@@ -1,29 +1,24 @@
-import java.util.List;
+package Pruebas;
 
-public class Main {
+import java.util.Arrays;
+
+public class MainTest {
     public static void main(String[] args) {
-        long[][] C = {
-                        {-1, -1, 0, 0, 1},
-                        {1, 0, 0, -1, 0},
-                        {0, 1, -1, 0, 0},
-                        {0, 1, 0, 1, -1},
-                        {1, 0, 1, 0, -1}};
-
-        long[] Sl = {1, 0, 0, 0, 0};
-        long[] St = {1, 0, 1, 0, 1};
-        // double[] Cl = {1, 1, 1, 1, 1};
-        // double[] Ct = {1, 1, 1, 1, 1};
-        // double [] Cl = {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1};
-        double[] Cl = {30, 30, 40, 40, 50, 50, 40, 40, 40, 40, 50, 40, 50, 30, 40, 50, 40, 40, 40, 50, 40, 50, 50, 50, 50, 50, 50, 35, 35, 35, 35, 50, 50, 50};
-        // double[] Ct = {1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000};
-        double[] Ct =
-                {20, 30, 30, 30, 30,
-                20, 20, 25, 25, 20,
-                20, 20, 20, 20, 20,
-                30, 20, 20, 30, 20,
-                25, 20, 20};
-
-        long[][] matrizC = {{-1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0}, //L1
+            // Matriz de distancias (16x16)
+        long[][] C1 = {
+                {-1, -1, 0, 0, 1},
+                {1, 0, 0, -1, 0},
+                {0, 1, -1, 0, 0},
+                {0, 1, 0, 1, -1},
+                {1, 0, 1, 0, -1}};
+        long [][] C2=
+                {
+                        {-1, 0, 0, 1},
+                        {1, -1, 0, 0},
+                        {1, 0, -1, 0},
+                        {0, 1, 0, -1},
+                        {0, 0, 1, -1}};
+        long[][] Cr = {{-1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0}, //L1
 
                 {1, -1, -1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
 
@@ -90,24 +85,40 @@ public class Main {
                 {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, -1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0},
 
                 {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, -1, 1}};
+        double[] Cl11 = {1, 1, 1, 1, 1};
+        double[] Ct11 = {1, 1, 1, 1, 1};
+        double[] Cl21 = {1, 1, 1, 1,1};
+        double[] Ct21 = {1, 1, 1, 1};
 
-        int numHilos = 4;
 
-        try {
-            // Llamada al metod multihilo desde el main
-            System.out.println("Con "+ numHilos +" hilos");
-            System.out.println("Procesadores disponibles: (Nucleos lógicos) " + Runtime.getRuntime().availableProcessors());
-            List<long[][]> resultados = TodoEnUnoLugares.BuscarEDSoloLugares(matrizC, Cl, Ct, numHilos);
-            //List<long[][]> resultados = TodoEnUnoOptimizado.BuscarEDMultihullConProgreso(matrizC, Cl, Ct, numHilos);
-            // Mostrar resultados
-            System.out.println("\n--- Resultados de configuraciones ED ---");
-            for (long[][] config : resultados) {
-                Proyector.ImprimirGranMatriz(config);
-                System.out.println("-------------");
-            }
+        double[] Ct1m = {1000, 1000, 1000, 1000, 1000};
+        double[] Ct2m = {1000, 1000, 1000, 1000};
+ double [] Clr1 = {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1};
+        double[] Clrr = {30, 30, 40, 40, 50, 50, 40, 40, 40, 40, 50, 40, 50, 30, 40, 50, 40, 40, 40, 50, 40, 50, 50, 50, 50, 50, 50, 35, 35, 35, 35, 50, 50, 50};
+         double[] Ctrm = {1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000};
+        double[] Ctr1 = {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1};
+        double[] Ctrr =
+                {20, 30, 30, 30, 30,
+                        20, 20, 25, 25, 20,
+                        20, 20, 20, 20, 20,
+                        30, 20, 20, 30, 20,
+                        25, 20, 20};
+            int numAnts = 10;           // Número de hormigas que participan en cada iteración.
+            int numIterations = 100000;   // Número de iteraciones para ejecutar el algoritmo.
+            float alpha = 1.0f;         // Parámetro que controlan la influencia de la feromona.
+            float beta = 5.0f;          // Parámetro que controlan la influencia de la visibilidad.
+            float evaporation = 0.5f;   // Tasa de evaporación de las feromonas.
+            float Q = 100.0f;           // Constante para la cantidad de feromona depositada.
 
-        } catch (Exception e) {
-            e.printStackTrace();
+            ACHTest redPetri = new ACHTest(Cr,Clr1,Ctr1,numAnts,numIterations,alpha,beta,evaporation,Q);
+        System.out.println("Configuracion minima encontrada: ");
+        System.out.println("Sl: " + Arrays.toString(redPetri.getConfiguracionBest().Sl));
+        System.out.println("St: " + Arrays.toString(redPetri.getConfiguracionBest().St));
+        System.out.println("> El costo total es: " + redPetri.getBestCost());
+
         }
+
     }
-}
+
+
+
