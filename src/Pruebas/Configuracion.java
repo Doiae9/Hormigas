@@ -3,17 +3,17 @@ package Pruebas;
 import java.util.Arrays;
 
 public class Configuracion implements Cloneable {
-   public long [] Sl;
-   public long [] St;
+   public int[] Sl;
+   public int [] St;
 
-    public Configuracion(long [] Sl, long [] St){
+    public Configuracion(int [] Sl, int [] St){
         this.Sl = Sl;
         this.St = St;
     }
 
     public Configuracion(int n, int m){
-         Sl = new long[n];
-         St = new long[m];
+         Sl = new int[n];
+         St = new int[m];
     }
     @Override
     public Configuracion clone(){

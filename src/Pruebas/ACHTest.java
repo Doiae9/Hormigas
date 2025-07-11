@@ -1,7 +1,6 @@
 package Pruebas;
 
-import java.util.Arrays;
-import java.util.Random;
+import java.util.*;
 
 public class ACHTest {
     private final int numLugares;
@@ -9,8 +8,8 @@ public class ACHTest {
     private final int numAnts;
     private final double[] Cl;
     private final double[] Ct;
-    private  double[] pheromoneL;
-    private  double[] pheromoneT;
+    private       double[] pheromoneL;
+    private       double[] pheromoneT;
     private final double alpha;
     private final double beta;
     private final double evaporation;
@@ -18,11 +17,15 @@ public class ACHTest {
     private Configuracion  bestConfiguracion;
     private double bestCost;
     private final Random random;
-    private final long[][] C;
+    private final int[][] C;
+    private final List<Configuracion> configuracionesMinimas = new ArrayList<>();
+    private final Map<Integer, Integer> frecuenciaSensoresActivos = new HashMap<>();
 
 
 
-    public ACHTest(long[][] C, double[] Cl,double[] Ct, int
+
+
+    public ACHTest(int[][] C, double[] Cl, double[] Ct, int
             numAnts, int numIterations,
                    double alpha, double beta, double evaporation, double Q) {
         this.C= C;
@@ -40,6 +43,8 @@ public class ACHTest {
         this.bestCost = Integer.MAX_VALUE;
         this.random = new Random();
         bestConfiguracion= new Configuracion(numLugares,numTransiciones);
+
+
 
         // Inicializa la matriz de feromonas con un pequeño valor inicial
         Arrays.fill(pheromoneL, 1.0);
@@ -60,9 +65,15 @@ public class ACHTest {
             antConfigurations[i] = constructSolution();
             antCostos[i] = ValuadorACH.CalcularPesoTotal(Cl,Ct,antConfigurations[i].Sl,antConfigurations[i].St);
 
+            int contarActivos = contarActivos(antConfigurations[i].Sl) + contarActivos(antConfigurations[i].St);
+            frecuenciaSensoresActivos.put(contarActivos, frecuenciaSensoresActivos.getOrDefault(contarActivos, 0) + 1);
             if (antCostos[i] < bestCost) {
                 bestCost = antCostos[i];
                 bestConfiguracion = antConfigurations[i].clone();
+                configuracionesMinimas.clear();
+                configuracionesMinimas.add(antConfigurations[i].clone());
+            }else if(antCostos[i]==bestCost){
+                configuracionesMinimas.add(antConfigurations[i].clone());
             }
         }
 
@@ -152,6 +163,53 @@ public class ACHTest {
 
 
         }
+    }
+    private int contarActivos(int[] vector) {
+        int count = 0;
+        for (int i : vector) {
+            if (i == 1) count++;
+        }
+        return count;
+    }
+    public void imprimirEstadisticas() {
+        System.out.println("\n***Frecuencia de sensores activos en configuraciones ED***");
+        frecuenciaSensoresActivos.forEach((cantidad, veces) -> {
+            System.out.println(cantidad + " sensores activos: " + veces + " configuración(es)");
+        });
+
+        System.out.println("\n=====Mejor configuración encontrada=====");
+        System.out.println("Sl: " + ConvertirPosicion(bestConfiguracion.Sl));
+        System.out.println("St: " + ConvertirPosicion(bestConfiguracion.St));
+        System.out.println("Costo total: " + bestCost);
+    }
+    public void imprimirConfiguracionesMinimas() {
+        Set<String> configuracionesUnicas = new HashSet<>();
+        System.out.println("\n Configuraciones con peso mínimo (" + bestCost + "):");
+        for (Configuracion c : configuracionesMinimas) {
+            String clave = Arrays.toString(c.Sl) + Arrays.toString(c.St);
+            if(!configuracionesUnicas.contains(clave)) {
+                configuracionesUnicas.add(clave);
+                System.out.println("Sl: " + ConvertirPosicion(c.Sl));
+                System.out.println( "St: " + ConvertirPosicion(c.St));
+                System.out.println("========================================");
+
+                if(configuracionesUnicas.size() >= 10) {
+                    System.out.println("Se encontraron más configuraciones mínimas, pero solo se muestran 10");
+                    break;
+                }
+            }
+
+        }
+    }
+
+    public String ConvertirPosicion(int[] arreglo) {
+        String resultado = "[";
+        for (int i = 0; i < arreglo.length; i++) {
+            if (arreglo[i] == 1) {
+                resultado += (i + 1)+ ", ";
+            }
+        }
+        return resultado + "]";
     }
 
 

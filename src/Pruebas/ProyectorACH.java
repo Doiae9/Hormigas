@@ -2,13 +2,13 @@ package Pruebas;
 
 public class ProyectorACH {
     //Variable auxiliar para guardar las proyecciones
-    public static long[][] ultimaProyeccion;
+    public static int[][] ultimaProyeccion;
 
-    public static long[][] ProyectarLugares(long[][] C, long[] Sl) {
+    public static int[][] ProyectarLugares(int[][] C, int[] Sl) {
             int conteo = 0;
-            for (long b : Sl) if (b == 1) conteo++;
+            for (int b : Sl) if (b == 1) conteo++;
 
-            long[][] resultado = new long[conteo][];
+            int[][] resultado = new int[conteo][];
             int idx = 0;
 
             for (int i = 0; i < Sl.length; i++) {
@@ -20,10 +20,10 @@ public class ProyectorACH {
             return resultado;
     }
     //optimizado
-    public static long[][] ProyectarTransiciones(long[][] C, long[] St) {
+    public static int[][] ProyectarTransiciones(int[][] C, int[] St) {
         // Validación de entrada
         if (C == null || St == null || C.length == 0 || C[0].length != St.length) {
-            return new long[0][0];
+            return new int[0][0];
         }
 
         final int filas = C.length;
@@ -31,15 +31,15 @@ public class ProyectorACH {
 
         // Contar columnas a conservar (St[j] == 0)
         int nuevasTransiciones = 0;
-        for (long t : St) {
+        for (int t : St) {
             nuevasTransiciones += (t == 0) ? 1 : 0;
         }
 
         if (nuevasTransiciones == 0) {
-            return new long[0][0];
+            return new int[0][0];
         }
 
-        long[][] resultado = new long[filas][nuevasTransiciones];
+        int[][] resultado = new int[filas][nuevasTransiciones];
 
         // Precalcular índices de columnas a conservar
         int[] columnasConservar = new int[nuevasTransiciones];
@@ -60,10 +60,10 @@ public class ProyectorACH {
     }
 
     //Proyeccion de ´c o, quitar lugares y transiciones
-    public static long [][] ProyeccionC(long[][] C, long[] Sl, long[] St){
-        long [][] lugares=  ProyectarLugares(C,Sl);
+    public static int[][] ProyeccionC(int[][] C, int[] Sl, int[] St){
+        int [][] lugares=  ProyectarLugares(C,Sl);
         if (lugares.length == 0 || lugares[0].length == 0) {
-            return new long[0][0];
+            return new int[0][0];
         }
         ultimaProyeccion= ProyectarTransiciones(lugares,St);
         return ultimaProyeccion;
@@ -71,12 +71,10 @@ public class ProyectorACH {
 
     //Comprobar que ninguna columna tenga 0 unicamente
     //No se puede optimizar más
-    public static boolean ComprobarCero(long[][] C_){
+    public static boolean ComprobarCero(int[][] C_){
         if(C_==null) {
-            //System.out.println("No existen proyecciones para mostrar");
             return false;
         }
-        //Desglozamos los lugares
        final int Lugares = C_.length;
       final  int Transiciones = C_[0].length;
         //[filas][columnas]
@@ -101,7 +99,7 @@ public class ProyectorACH {
     //Funcion auxiliar para comparar columnas -> Recibe la matriz, Recibe una columna,
     //Recibe otra columna a comparar
     //No se puede optimizar mas en la configuración actual
-    public static boolean ColumnasIguales(long[][] C_, int i, int j){
+    public static boolean ColumnasIguales(int[][] C_, int i, int j){
         int filas = C_.length;
         for (int k=0; k<filas; k++){
             //Compara que exista una diferencia
@@ -115,7 +113,7 @@ public class ProyectorACH {
 
         //Comprueba la redundancia de las columnas
         //Recibe la C Proyectada
-    public static boolean ComprobarRedundancia(long[][] C_){
+    public static boolean ComprobarRedundancia(int[][] C_){
         //Columnas
         long Transiciones =C_[0].length;
         for (int i = 0; i < Transiciones-1; i++) {
@@ -130,13 +128,13 @@ public class ProyectorACH {
         return false;
     }
     //Comprobamos si existe un 0 o alguna redundancia
-    public static boolean ED(long[][] C_){
+    public static boolean ED(int[][] C_){
        return !ComprobarCero(C_) && !ComprobarRedundancia(C_);
 
     }
     //Verificamos que sea ED
-    public static boolean VerificarED(long[][] C, long [] Sl, long [] St){
-        long[][] proyeccion = ProyeccionC(C, Sl, St);
+    public static boolean VerificarED(int[][] C, int [] Sl, int[] St){
+        int[][] proyeccion = ProyeccionC(C, Sl, St);
         if (proyeccion.length == 0 || proyeccion[0].length == 0) {
             // Evitar evaluaciones innecesarias si no hay datos
             return false;
@@ -147,14 +145,26 @@ public class ProyectorACH {
 
     //Imprimir Matriz
     public static void ImprimirMatiz(int [][] matriz){
-        for(int i=0; i<matriz.length; i++){
-            for(int j=0; j<matriz[i].length; j++){
-                System.out.print(matriz[i][j]+"\t");
+        for (int[] ints : matriz) {
+            for (int j = 0; j < ints.length; j++) {
+                System.out.print(ints[j] + "\t");
 
             }
             System.out.println(" ");
 
         }
+    }
+    public static void ImprimirArreglo(int [] arreglo){
+        for(int i=0; i<arreglo.length; i++){
+            System.out.print(arreglo[i]+"\t");
+        }
+        System.out.println(" ");
+    }
+    public static void ImprimirArregloDouble(double [] arreglo){
+        for(int i=0; i<arreglo.length; i++){
+            System.out.print(arreglo[i]+"\t");
+        }
+        System.out.println(" ");
     }
     public static void ImprimirGranArreglo(long [] arreglo){
         for(int i=0; i<arreglo.length; i++){
@@ -162,6 +172,7 @@ public class ProyectorACH {
         }
         System.out.println(" ");
     }
+
     public static void ImprimirGranMatriz(long [][] matriz){
         for(int i=0; i<matriz.length; i++){
             for(int j=0; j<matriz[i].length; j++){

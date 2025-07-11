@@ -11,7 +11,7 @@ public class ValuadorACH {
 //            }
 //            return aux;
 //        }
-        public static double CalcularPesoGeneral(double [] Costos, long [] Sensores){
+        public static double CalcularPesoGeneral(double [] Costos, int[] Sensores){
             double peso=0;
             for(int i=0; i<Sensores.length; i++){
                 peso +=Sensores[i]*Costos[i];
@@ -28,7 +28,7 @@ public class ValuadorACH {
 //        }
 //        return aux;
 //    }
-    public static double CalcularPesoTotal(double[] Cl, double []Ct, long[] Sl, long[] St){
+    public static double CalcularPesoTotal(double[] Cl, double []Ct, int[] Sl, int[] St){
         return CalcularPesoGeneral(Cl,Sl) + CalcularPesoGeneral(Ct,St);
     }
 }
