@@ -164,7 +164,7 @@ public class ACHTest {
 
         }
     }
-    private int contarActivos(int[] vector) {
+    public static int contarActivos(int[] vector) {
         int count = 0;
         for (int i : vector) {
             if (i == 1) count++;
@@ -172,10 +172,10 @@ public class ACHTest {
         return count;
     }
     public void imprimirEstadisticas() {
-        System.out.println("\n***Frecuencia de sensores activos en configuraciones ED***");
-        frecuenciaSensoresActivos.forEach((cantidad, veces) -> {
-            System.out.println(cantidad + " sensores activos: " + veces + " configuración(es)");
-        });
+//        System.out.println("\n***Frecuencia de sensores activos en configuraciones ED***");
+//        frecuenciaSensoresActivos.forEach((cantidad, veces) -> {
+//            System.out.println(cantidad + " sensores activos: " + veces + " configuración(es)");
+//        });
 
         System.out.println("\n=====Mejor configuración encontrada=====");
         System.out.println("Sl: " + ConvertirPosicion(bestConfiguracion.Sl));
