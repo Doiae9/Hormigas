@@ -3,7 +3,7 @@ package Pruebas;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 import java.util.Arrays;
-import java.util.List;
+
 
 public class MainTest {
     public static void main(String[] args) throws FileNotFoundException {
