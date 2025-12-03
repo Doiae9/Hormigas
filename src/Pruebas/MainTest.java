@@ -120,7 +120,7 @@ public class MainTest {
         int numAnts = 100;           // Número de hormigas que participan en cada iteración.
         int numIterations = 10000;   // Número de iteraciones para ejecutar el algoritmo.
         float Q = 100.0f;  // Constante para la cantidad de feromona depositada.
-        String direccionArchivo = "C:\\Users\\Doia\\Desktop\\MatrizReal.txt";
+        String direccionArchivo = "C:\\Users\\Doia\\Desktop\\MatrizReal.txt"; //Matrices a partir de un archivo
         String direccionArchivo2 = "C:\\Users\\Doia\\Desktop\\MatrizS.txt";
 
         DatosExtraidos datos = Lector.leerDesdeArchivo(direccionArchivo);
@@ -147,18 +147,13 @@ public class MainTest {
                         int activos = ACHTest.contarActivos(best.Sl) + ACHTest.contarActivos(best.St);
                         writer.println(i + "," + alpha + "," + beta + "," + evap + "," + redPetri.getBestCost() + "," + activos + "," +
                                 Arrays.toString(best.Sl) + "," + Arrays.toString(best.St));
-
-
                     }
             }
-
         }
             writer.close();
-
     }
 
     }
-
 }
 
 
