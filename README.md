@@ -1,2 +1,54 @@
-# SISTEMAS DE MONITOREO, AUTOMATIZACION Y ROBOTICA APLICADA
-### Utilización de un Algoritmo de Colonia de Hormigas para minimizar el costo de la red de monitoreo de un sistema de eventos discretos
+# Optimización de Sensores en Sistemas de Eventos Discretos (Redes de Petri)
+
+> **Proyecto de Investigación - Verano Delfín**
+> [cite_start]**Asesor:** Luis Isidro Aguirre Salas (Universidad de Guadalajara) [cite: 2]
+> [cite_start]**Desarrollador:** Leonardo Daniel García Hernández (Instituto Tecnológico de Morelia) [cite: 3]
+
+## 📖 Descripción General
+
+[cite_start]Este proyecto aborda el problema del monitoreo eficiente en sistemas de automatización y robótica mediante el uso de **Redes de Petri**[cite: 5, 7]. [cite_start]El objetivo principal fue desarrollar un software en **Java** capaz de reducir la cantidad de sensores físicos necesarios para monitorear un sistema, manteniendo su observabilidad completa y reduciendo costos de implementación[cite: 6, 7].
+
+El sistema compara dos enfoques algorítmicos para resolver la optimización de sensores:
+1.  **Fuerza Bruta:** Para validación exacta en redes pequeñas.
+2.  [cite_start]**Algoritmo de Colonia de Hormigas (ACO):** Una metaheurística bio-inspirada para resolver el problema en redes complejas donde la complejidad computacional es inmanejable[cite: 37, 38].
+
+## ⚙️ El Problema Técnico
+
+El monitoreo de estados en sistemas de eventos discretos se vuelve exponencialmente complejo a medida que el sistema crece.
+* [cite_start]**Representación:** Se utilizó una matriz de incidencia de estados (0, 1, -1) para modelar lugares y transiciones, asegurando el control de estados lógicos (ej. un sistema no puede estar en estado "vivo" y "curándose" sin relación lógica)[cite: 13, 14].
+* **Complejidad Computacional:** El problema de optimización se clasificó como **No Polinomial Duro (NP-Hard)**. [cite_start]La complejidad es de $2^{n+m}$ (donde $n$ son lugares y $m$ transiciones)[cite: 9, 35].
+* [cite_start]**Escalabilidad:** En pruebas con una matriz de 34 lugares y 23 transiciones ($2^{57}$ combinaciones), un enfoque de fuerza bruta tardaría siglos en completarse, haciendo necesaria una solución heurística[cite: 33].
+
+## 🛠️ Tecnologías Utilizadas
+
+* [cite_start]**Lenguaje:** Java[cite: 12].
+* [cite_start]**Entorno de Desarrollo (IDE):** IntelliJ IDEA[cite: 12].
+* [cite_start]**Conceptos Clave:** Algoritmos Heurísticos, Redes de Petri, Matrices de Incidencia, Programación Concurrente (Hilos)[cite: 10, 13].
+
+## Algoritmos Implementados
+
+### 1. Comprobación por Fuerza Bruta
+[cite_start]Se implementó un algoritmo que evalúa cada combinación posible de sensores convirtiendo números decimales a binarios y comprobando la observabilidad de la matriz resultante[cite: 22, 24].
+* [cite_start]Se descartan matrices donde columnas repetidas o filas de ceros generan ambigüedad en el estado del sistema[cite: 19].
+* [cite_start]**Limitación:** Funcional pero ineficiente para sistemas grandes debido a la explosión combinatoria[cite: 33].
+
+### 2. Metaheurística de Colonia de Hormigas (ACO)
+[cite_start]Se adaptó el algoritmo clásico del "Problema del Viajante" (TSP) para recorrer "sensores" en lugar de ciudades[cite: 38].
+* **Funcionamiento:** Simula el comportamiento de hormigas depositando feromonas en las soluciones (configuraciones de sensores) más eficientes.
+* **Parámetros Ajustables:**
+    * [cite_start]**Alfa:** Determina la visibilidad de la solución[cite: 39].
+    * [cite_start]**Beta:** Determina la influencia de la feromona[cite: 39].
+    * [cite_start]**Evaporación:** Reduce el rastro de feromona para evitar estancamiento en óptimos locales[cite: 39].
+    * [cite_start]**Q (Peso):** Cantidad de feromona depositada[cite: 39].
+
+## Resultados y Conclusiones
+
+[cite_start]La implementación del algoritmo de hormigas permitió encontrar configuraciones de sensores óptimas y de bajo costo en tiempos razonables, superando la limitación de la invarianza temporal de la fuerza bruta[cite: 36, 43].
+
+[cite_start]Se determinó que la eficiencia del algoritmo depende del ajuste fino (tuning) de los parámetros Alfa, Beta y Evaporación, requiriendo múltiples ejecuciones para validar la desviación estándar y la fiabilidad de la solución encontrada[cite: 43, 44].
+
+## 📚 Referencias
+
+1.  *Problema del viajante de Comercio TSP (VI). [cite_start]Método Colonia de Hormigas (ACO).* [cite: 46]
+2.  [cite_start]Murata, T. *Petri Nets: Properties, Analysis and Applications.* IEEE. [cite: 47]
+3.  [cite_start]Dorigo, M. *The Ant Colony Optimization Meta-Heuristic.* [cite: 48]
